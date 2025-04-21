@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Chatbot Digital</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    .chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #fff;
+      border: 2px solid #4CAF50;
+      border-radius: 20px;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      overflow: hidden;
+      z-index: 1000;
+    }
+    .chat-header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      position: relative;
+    }
+    .chat-header img {
+      width: 24px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    .chat-content {
+      padding: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .category-btn {
+      margin: 5px 0;
+      padding: 10px;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 10px;
+      width: 100%;
+    }
+    .sub-btn {
+      margin: 3px 0;
+      padding: 8px;
+      border: none;
+      color: white;
+      font-weight: normal;
+      cursor: pointer;
+      border-radius: 8px;
+      width: 100%;
+      opacity: 0.9;
+    }
+    .response {
+      background-color: #e0f7fa;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    #welcome-message {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      animation: fadeOut 5s forwards;
+    }
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; display: none; }
+    }
+    .whatsapp-btn {
+      background-color: #25D366;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      margin-top: 10px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chatbot">
+  <div class="chat-header">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Avatar"> Asistente Digital
+  </div>
+  <div id="welcome-message">👋 ¡Hola! Soy tu asistente digital. ¿En qué puedo ayudarte hoy?</div>
+  <div class="chat-content" id="chat-content">
+    <button class="category-btn" style="background-color:#2196F3" onclick="showSub('info')">📘 Información General</button>
+    <button class="category-btn" style="background-color:#FF9800" onclick="showSub('benefits')">💡 Beneficios del Curso</button>
+    <button class="category-btn" style="background-color:#9C27B0" onclick="showSub('tecnica')">⚙️ Detalles Técnicos</button>
+    <button class="category-btn" style="background-color:#F44336" onclick="showSub('inscripcion')">📝 Inscripción y Pagos</button>
+    <div id="sub-buttons"></div>
+    <div id="response"></div>
+    <a class="whatsapp-btn" href="https://api.whatsapp.com/send?phone=5491166416777&text=solicito%20info" target="_blank">💬 Consultar con un asesor</a>
+  </div>
+</div>
+
+<script>
+const data = {
+  info: {
+    color: '#64B5F6',
+    questions: [
+      "¿Qué es la Diplomatura en Superpoderes Digitales?",
+      "¿A qué edades está dirigida?",
+      "¿Se necesita experiencia previa en robótica o programación?",
+      "¿Qué contenidos se abordan en los cursos?",
+      "¿Los cursos son 100% virtuales?"
+    ]
+  },
+  benefits: {
+    color: '#FFCC80',
+    questions: [
+      "¿Qué habilidades desarrollará mi hijo/a?",
+      "¿Los alumnos reciben diplomas al finalizar?",
+      "¿Qué diferencia este curso de otros?",
+      "¿Cómo se aplica la inteligencia artificial en los proyectos?",
+      "¿Hay soporte o acompañamiento durante el curso?"
+    ]
+  },
+  tecnica: {
+    color: '#CE93D8',
+    questions: [
+      "¿Qué es WebControl-IA?",
+      "¿Qué herramientas usan los estudiantes?",
+      "¿Cómo acceden a los laboratorios remotos?",
+      "¿Se puede trabajar desde un celular o tablet?",
+      "¿Qué tipo de proyectos se realizan?"
+    ]
+  },
+  inscripcion: {
+    color: '#EF9A9A',
+    questions: [
+      "¿Cuánto cuesta cada curso?",
+      "¿Hay descuentos por inscribirse a los tres cursos?",
+      "¿Cómo se realiza la inscripción?",
+      "¿Se puede pagar en cuotas sin interés?",
+      "¿Qué formas de pago aceptan?"
+    ]
+  }
+};
+
+function showSub(cat) {
+  const subDiv = document.getElementById('sub-buttons');
+  const resDiv = document.getElementById('response');
+  subDiv.innerHTML = '';
+  resDiv.innerHTML = '';
+  data[cat].questions.forEach(q => {
+    const btn = document.createElement('button');
+    btn.textContent = q;
+    btn.className = 'sub-btn';
+    btn.style.backgroundColor = data[cat].color;
+    btn.onclick = () => resDiv.innerHTML = `<div class='response'>🤖 ${getAnswer(q)}</div>`;
+    subDiv.appendChild(btn);
+  });
+}
+
+function getAnswer(q) {
+  const answers = {
+    "¿Qué es la Diplomatura en Superpoderes Digitales?": "Es un programa educativo que combina robótica, inteligencia artificial y programación con Arduino.",
+    "¿A qué edades está dirigida?": "A niños y jóvenes entre 10 y 17 años.",
+    "¿Se necesita experiencia previa en robótica o programación?": "No. Empezamos desde cero y la IA guía cada paso.",
+    "¿Qué contenidos se abordan en los cursos?": "Desde programación visual hasta creación de servidores web embebidos.",
+    "¿Los cursos son 100% virtuales?": "Sí, totalmente online y con acceso a laboratorios reales.",
+    "¿Qué habilidades desarrollará mi hijo/a?": "Creatividad, pensamiento lógico, innovación y dominio de la tecnología.",
+    "¿Los alumnos reciben diplomas al finalizar?": "¡Claro! Cada curso entrega su propio diploma acreditativo.",
+    "¿Qué diferencia este curso de otros?": "Usamos IA y robótica real con una metodología propia: WebControl-IA.",
+    "¿Cómo se aplica la inteligencia artificial en los proyectos?": "Se utiliza para generar código, diseñar interfaces y controlar objetos reales.",
+    "¿Hay soporte o acompañamiento durante el curso?": "Sí. Ofrecemos asesoría personalizada y grupos de apoyo.",
+    "¿Qué es WebControl-IA?": "Un método que permite controlar objetos desde páginas web conectadas a placas físicas.",
+    "¿Qué herramientas usan los estudiantes?": "ArduinoBlocks, Tinkercad, ChatGPT, ESP8266, y más.",
+    "¿Cómo acceden a los laboratorios remotos?": "Vía internet, con acceso seguro y programado.",
+    "¿Se puede trabajar desde un celular o tablet?": "Sí. Todo está adaptado a dispositivos móviles.",
+    "¿Qué tipo de proyectos se realizan?": "Control de luces, motores, sensores y tableros web interactivos.",
+    "¿Cuánto cuesta cada curso?": "$97 por curso, con opción de cuotas sin interés.",
+    "¿Hay descuentos por inscribirse a los tres cursos?": "Sí. El pack completo cuesta $247, o $197 con promoción.",
+    "¿Cómo se realiza la inscripción?": "A través de nuestra plataforma online o consultando por WhatsApp.",
+    "¿Se puede pagar en cuotas sin interés?": "¡Sí! Facilitamos el acceso a todos los interesados.",
+    "¿Qué formas de pago aceptan?": "Transferencias, tarjetas y métodos digitales."
+  };
+  return answers[q] || "Estoy buscando la mejor respuesta para ti...";
+}
+</script>
+</body>
+</html>
